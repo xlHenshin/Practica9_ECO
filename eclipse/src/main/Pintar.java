@@ -42,4 +42,22 @@ public class Pintar {
 		
 	}
 
+	public int getNumPedido() {
+		return numPedido;
+	}
+
+	public void setNumPedido(int numPedido) {
+		this.numPedido = numPedido;
+	}
+
+	public String getItem() {
+		return item;
+	}
+
+	public void setItem(String item) {
+		this.item = item;
+	}
+	
+	
+
 }

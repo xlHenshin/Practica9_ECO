@@ -13,6 +13,13 @@ import java.net.UnknownHostException;
 public class UDPConnection extends Thread{
 
     private DatagramSocket socket;
+    private MainActivity main;
+    private String mensaje;
+    private OnMessageListener observer;
+
+    public void setObserver(OnMessageListener observer) {
+        this.observer=observer;
+    }
 
     public void run(){
 
@@ -26,8 +33,10 @@ public class UDPConnection extends Thread{
                 Log.e(">>>", "Esperando datagrama...");
                 socket.receive(packet);
 
-                String mensaje = new String(packet.getData()).trim();
+                mensaje = new String(packet.getData()).trim();
+                observer.onMessage(mensaje);
                 Log.e(">>>", "Datagrama recibido: "+mensaje);
+
             }
 
         } catch (SocketException e) {

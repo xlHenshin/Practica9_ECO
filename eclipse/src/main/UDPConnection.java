@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
@@ -16,6 +17,8 @@ public class UDPConnection extends Thread{
 	private DatagramSocket socket;
 	private Pedido pedido;
 	private OnItemListener observer;
+	private SocketAddress comprador;
+	private String ipComprador, portComprador;
 	
 	public void setObserver(OnItemListener observer) {
 		this.observer=observer;
@@ -37,6 +40,13 @@ public class UDPConnection extends Thread{
 				
 				Gson gson = new Gson();
 				Generic generic = gson.fromJson(mensaje, Generic.class);
+				comprador = packet.getSocketAddress();
+				
+				
+				String datoComprador = comprador.toString().replace("/", "");
+				String[] arregloComprador= datoComprador.split(":");
+				ipComprador = arregloComprador[0];
+				portComprador = arregloComprador[1];
 				
 				System.out.println("Datagrama recibido: " + generic.item);
 				
@@ -89,8 +99,9 @@ public class UDPConnection extends Thread{
 					
 					try {
 						
-						InetAddress ip = InetAddress.getByName("192.168.1.2");
-						DatagramPacket packet = new DatagramPacket(mensaje.getBytes(), mensaje.getBytes().length, ip, 6000);
+						InetAddress ip = InetAddress.getByName(ipComprador);
+						int port = Integer.parseInt(portComprador);
+						DatagramPacket packet = new DatagramPacket(mensaje.getBytes(), mensaje.getBytes().length, ip, port);
 						socket.send(packet);
 						
 					} catch (UnknownHostException e) {

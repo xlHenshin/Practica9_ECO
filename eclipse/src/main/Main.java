@@ -59,20 +59,25 @@ public class Main extends PApplet implements OnItemListener{
 	
 	public void mousePressed() {
 		
-		Gson gson = new Gson();
-		//String json = gson.toJson(jsonElement);
-		
-		System.out.println("Datagrama enviado");
-		udp.sendMessage("Hola buenas tardes");
+		for (int i = 0; i < pedido.size(); i++) {
+			
+			if (mouseX>posX && mouseX<posX+300 && mouseY>posY+(120*i) && mouseY<posY+(120*i)+100) {
+				udp.sendMessage("Su "+ pedido.get(i).getItem()+ " ya fue despachado");
+				numPedido=numPedido-1;
+				System.out.println(numPedido);
+				pedido.remove(i);
+			}
+			
+		}
 		
 	}
 
 	public void onItemReceived(String item) {
 		
-		numPedido++;
-		
-		if (numPedido<=6) {
+		if (numPedido<6) {
 			
+			numPedido++;
+			System.out.println(numPedido);
 			int numero = numPedido;
 
 

@@ -5,10 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnMessageListener {
 
     private UDPConnection udp;
     private ImageView jugo, sandwich, yogurt, hotdog;
@@ -24,13 +25,13 @@ public class MainActivity extends AppCompatActivity {
         hotdog=findViewById(R.id.hotdog);
 
         udp = new UDPConnection();
+        udp.setObserver(this);
         udp.start();
 
         jugoClick();
         sandwichClick();
         yogurtClick();
         hotdogClick();
-
     }
 
     public void jugoClick(){
@@ -90,6 +91,16 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(">>>", "Datagrama enviado");
                     String json = gson.toJson(pedido);
                     udp.sendMessage(json);
+                }
+
+        );
+    }
+
+    @Override
+    public void onMessage(String mensaje) {
+        runOnUiThread(
+                ()->{
+                    Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show();
                 }
 
         );
